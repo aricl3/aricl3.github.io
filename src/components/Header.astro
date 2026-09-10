@@ -1,0 +1,47 @@
+---
+import { copy, pathFor, type Lang } from "@/data/site";
+
+interface Props { lang: Lang; currentPath: string; alternatePath?: string }
+const { lang, currentPath, alternatePath } = Astro.props;
+const t = copy[lang];
+const links = [
+  [t.nav.home, pathFor(lang)],
+  [t.nav.notes, pathFor(lang, "notes")],
+  [t.nav.projects, pathFor(lang, "projects")],
+  [t.nav.about, pathFor(lang, "about")]
+];
+const languageHref = alternatePath ?? (lang === "zh" ? "/en/" : "/");
+---
+
+<header class="site-header">
+  <div class="nav-shell">
+    <a class="brand" href={pathFor(lang)} aria-label={lang === "zh" ? "Rocky 首页" : "Rocky home"}>
+      <span>R</span><strong>Rocky</strong>
+    </a>
+    <nav aria-label={lang === "zh" ? "主导航" : "Primary navigation"}>
+      {links.map(([label, href]) => (
+        <a href={href} aria-current={currentPath === href || (href !== "/" && href !== "/en/" && currentPath.startsWith(`${href}/`)) ? "page" : undefined}>{label}</a>
+      ))}
+    </nav>
+    <div class="nav-actions">
+      <a class="icon-link search-link" href={pathFor(lang, "search")} aria-label={t.nav.search} title={t.nav.search}>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4-4"></path></svg>
+      </a>
+      <a class="language-link" href={languageHref} hreflang={lang === "zh" ? "en" : "zh-CN"}>{t.languageLabel}</a>
+      <button class="icon-link theme-toggle" type="button" aria-label={lang === "zh" ? "切换深浅色" : "Toggle color theme"} title={lang === "zh" ? "切换深浅色" : "Toggle color theme"}>
+        <svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.66 6.34l1.41-1.41"></path></svg>
+        <svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"></path></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>(".theme-toggle").forEach((button) => {
+    button.addEventListener("click", () => {
+      const next = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+      document.documentElement.dataset.theme = next;
+      localStorage.setItem("theme", next);
+    });
+  });
+</script>

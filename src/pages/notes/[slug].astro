@@ -1,0 +1,36 @@
+---
+import { getCollection, render, type CollectionEntry } from "astro:content";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { copy, formatDate } from "@/data/site";
+
+export async function getStaticPaths() {
+  const all = await getCollection("notes", ({ data }) => !data.draft);
+  return all.filter((note) => note.data.lang === "zh").map((note) => {
+    const paired = all.find((candidate) => candidate.data.lang === "en" && candidate.data.translationKey === note.data.translationKey);
+    const alternatePath = paired ? `/en/notes/${paired.id.split("/").at(-1)}/` : "/en/notes/";
+    return { params: { slug: note.id.split("/").at(-1) }, props: { note, alternatePath } };
+  });
+}
+
+interface Props { note: CollectionEntry<"notes">; alternatePath: string }
+const { note, alternatePath } = Astro.props;
+const { Content, headings } = await render(note);
+const toc = headings.filter((heading) => heading.depth === 2 || heading.depth === 3);
+const t = copy.zh;
+---
+
+<BaseLayout title={note.data.title} description={note.data.description} lang="zh" alternatePath={alternatePath} type="article" publishedAt={note.data.publishedAt}>
+  <article class="note-article section-shell">
+    <a class="back-link" href="/notes/">← {t.backToNotes}</a>
+    <header>
+      <div class="note-meta"><time datetime={note.data.publishedAt.toISOString()}>{t.published} {formatDate(note.data.publishedAt, "zh")}</time>{note.data.updatedAt && <span> · {t.updated} {formatDate(note.data.updatedAt, "zh")}</span>}</div>
+      <h1 data-pagefind-meta="title">{note.data.title}</h1>
+      <p class="note-dek">{note.data.description}</p>
+      <div class="tag-row">{note.data.tags.map((tag) => <span>{tag}</span>)}</div>
+    </header>
+    <div class="article-layout">
+      <div class="prose"><Content /></div>
+      {toc.length > 0 && <aside class="toc"><strong>{t.toc}</strong><ol>{toc.map((heading) => <li class={`depth-${heading.depth}`}><a href={`#${heading.slug}`}>{heading.text}</a></li>)}</ol></aside>}
+    </div>
+  </article>
+</BaseLayout>

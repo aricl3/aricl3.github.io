@@ -1,0 +1,52 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { copy, type Lang } from "@/data/site";
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = copy[lang];
+---
+
+<BaseLayout title={t.searchTitle} lang={lang} alternatePath={lang === "zh" ? "/en/search/" : "/search/"}>
+  <header class="page-hero section-shell compact"><p class="section-index">SEARCH</p><h1>{t.searchTitle}</h1></header>
+  <section class="section-shell search-panel" data-lang={lang} data-hint={t.searchHint} data-empty={t.noResults}>
+    <label for="site-search">{t.searchPlaceholder}</label>
+    <input id="site-search" type="search" placeholder={t.searchPlaceholder} autocomplete="off" />
+    <p class="search-status" aria-live="polite">{t.searchHint}</p>
+    <div class="search-results"></div>
+  </section>
+</BaseLayout>
+
+<script>
+  const panel = document.querySelector<HTMLElement>(".search-panel");
+  const input = document.querySelector<HTMLInputElement>("#site-search");
+  const status = document.querySelector<HTMLElement>(".search-status");
+  const results = document.querySelector<HTMLElement>(".search-results");
+  type Pagefind = { search: (query: string, options?: object) => Promise<{ results: Array<{ data: () => Promise<{ url: string; meta: { title?: string }; excerpt: string }> }> }> };
+  let pagefind: Pagefind | undefined;
+
+  async function runSearch(query: string) {
+    if (!panel || !status || !results) return;
+    if (!query.trim()) { status.textContent = panel.dataset.hint ?? ""; results.replaceChildren(); return; }
+    try {
+      const loadPagefind = new Function("return import('/pagefind/pagefind.js')") as () => Promise<Pagefind>;
+      const engine = pagefind ??= await loadPagefind();
+      const response = await engine.search(query, { filters: { lang: panel.dataset.lang } });
+      const entries = await Promise.all(response.results.slice(0, 20).map((item) => item.data()));
+      results.replaceChildren(...entries.map((entry) => {
+        const article = document.createElement("article");
+        article.className = "search-result";
+        const link = document.createElement("a");
+        link.href = entry.url;
+        link.textContent = entry.meta.title ?? entry.url;
+        const excerpt = document.createElement("p");
+        excerpt.innerHTML = entry.excerpt;
+        article.append(link, excerpt);
+        return article;
+      }));
+      status.textContent = entries.length ? "" : (panel.dataset.empty ?? "");
+    } catch {
+      status.textContent = panel.dataset.empty ?? "";
+    }
+  }
+  input?.addEventListener("input", () => runSearch(input.value));
+</script>

@@ -1,0 +1,21 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import ProjectCard from "@/components/ProjectCard.astro";
+import { copy, type Lang } from "@/data/site";
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = copy[lang];
+const projects = (await getCollection("projects", ({ data }) => data.lang === lang)).sort((a, b) => a.data.order - b.data.order);
+---
+
+<BaseLayout title={t.nav.projects} description={t.projectsIntro} lang={lang} alternatePath={lang === "zh" ? "/en/projects/" : "/projects/"}>
+  <header class="page-hero section-shell">
+    <p class="section-index">PROJECTS / {String(projects.length).padStart(2, "0")}</p>
+    <h1>{t.projectsTitle}</h1>
+    <p>{t.projectsIntro}</p>
+  </header>
+  <section class="section-shell page-content">
+    <div class="project-grid full">{projects.map((project) => <ProjectCard project={project} />)}</div>
+  </section>
+</BaseLayout>

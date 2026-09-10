@@ -1,0 +1,46 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { copy, site, type Lang } from "@/data/site";
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = copy[lang];
+const experience = lang === "zh" ? [
+  ["2025 — 现在", "数据科学家", "法律科技与生成式 AI 产品"],
+  ["2026 — 现在", "创始人 / 技术负责人", "Smart Agent Detector"],
+  ["2025", "AI 项目工程师", "企业级代码生成与模型微调"]
+] : [
+  ["2025 — Present", "Data Scientist", "Legal technology and generative AI products"],
+  ["2026 — Present", "Founder / Technical Lead", "Smart Agent Detector"],
+  ["2025", "AI Project Engineer", "Enterprise code generation and model fine-tuning"]
+];
+---
+
+<BaseLayout title={t.aboutTitle} description={t.aboutLead} lang={lang} alternatePath={lang === "zh" ? "/en/about/" : "/about/"}>
+  <header class="page-hero section-shell about-hero">
+    <p class="section-index">ABOUT / ROCKY</p>
+    <h1>{t.aboutTitle}</h1>
+    <p class="about-lead">{t.aboutLead}</p>
+  </header>
+  <div class="section-shell about-grid page-content">
+    <section>
+      <h2>{lang === "zh" ? "简介" : "Profile"}</h2>
+      <p>{t.aboutBody}</p>
+      <div class="about-links"><a class="button primary" href={site.github}>GitHub</a><a class="button secondary" href={`mailto:${site.email}`}>{t.contact}</a></div>
+    </section>
+    <section>
+      <h2>{t.experience}</h2>
+      <ol class="timeline">
+        {experience.map(([period, role, context]) => <li><time>{period}</time><div><strong>{role}</strong><p>{context}</p></div></li>)}
+      </ol>
+    </section>
+    <section>
+      <h2>{t.education}</h2>
+      <div class="education-card"><strong>{lang === "zh" ? "人工智能理学硕士" : "M.Sc. in Artificial Intelligence"}</strong><p>{lang === "zh" ? "香港大学" : "The University of Hong Kong"}</p></div>
+      <div class="education-card"><strong>{lang === "zh" ? "计算机科学理学学士" : "B.Sc. in Computer Science"}</strong><p>{lang === "zh" ? "天津大学" : "Tianjin University"}</p></div>
+    </section>
+    <section>
+      <h2>{t.values}</h2>
+      <ol class="value-list">{t.valueItems.map((item, index) => <li><span>0{index + 1}</span><p>{item}</p></li>)}</ol>
+    </section>
+  </div>
+</BaseLayout>

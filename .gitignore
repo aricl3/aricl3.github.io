@@ -1,0 +1,19 @@
+node_modules/
+dist/
+.astro/
+.env
+.env.local
+.env.*
+!.env.example
+.DS_Store
+coverage/
+npm-debug.log*
+.vite/
+.pagefind/
+*.tsbuildinfo
+
+# Legacy application directories retained locally only.
+backend/
+frontend/
+deploy/
+nginx/

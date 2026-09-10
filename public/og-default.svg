@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#f5f1e8"/>
+  <path d="M0 0h20v630H0z" fill="#315c4c"/>
+  <circle cx="1025" cy="120" r="190" fill="#dce7dd"/>
+  <text x="100" y="250" font-family="Georgia, serif" font-size="116" fill="#24251f">Rocky</text>
+  <text x="105" y="330" font-family="Arial, sans-serif" font-size="34" fill="#696b61">AI Agents · RAG · LLM Evaluation · Web3 Security</text>
+  <path d="M105 402h240" stroke="#b66543" stroke-width="5"/>
+  <text x="105" y="480" font-family="Arial, sans-serif" font-size="28" fill="#315c4c">Think independently. Keep building.</text>
+</svg>

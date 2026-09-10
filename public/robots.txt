@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://rocky-mr.com/sitemap-index.xml

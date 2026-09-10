@@ -1,0 +1,18 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { copy, formatDate, pathFor, type Lang } from "@/data/site";
+interface Props { note: CollectionEntry<"notes">; lang: Lang }
+const { note, lang } = Astro.props;
+const slug = note.id.split("/").at(-1);
+---
+
+<article class="note-card" data-tags={note.data.tags.join("|").toLowerCase()}>
+  <div class="note-meta">
+    <time datetime={note.data.publishedAt.toISOString()}>{formatDate(note.data.publishedAt, lang)}</time>
+    <span aria-hidden="true">·</span>
+    <span>{note.data.tags.join(" · ")}</span>
+  </div>
+  <h3><a href={pathFor(lang, `notes/${slug}`)}>{note.data.title}</a></h3>
+  <p>{note.data.description}</p>
+  <a class="text-link" href={pathFor(lang, `notes/${slug}`)}>{copy[lang].readMore} <span aria-hidden="true">↗</span></a>
+</article>

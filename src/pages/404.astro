@@ -1,0 +1,13 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { copy } from "@/data/site";
+const t = copy.zh;
+---
+<BaseLayout title={t.notFoundTitle} lang="zh">
+  <section class="not-found section-shell">
+    <p class="section-index">ERROR / 404</p>
+    <h1>{t.notFoundTitle}</h1>
+    <p>{t.notFoundBody}</p>
+    <a class="button primary" href="/">{t.backHome}</a>
+  </section>
+</BaseLayout>

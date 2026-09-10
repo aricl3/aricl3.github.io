@@ -1,0 +1,50 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import NoteCard from "@/components/NoteCard.astro";
+import ProjectCard from "@/components/ProjectCard.astro";
+import { copy, pathFor, site, type Lang } from "@/data/site";
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = copy[lang];
+const projects = (await getCollection("projects", ({ data }) => data.lang === lang && data.featured))
+  .sort((a, b) => a.data.order - b.data.order).slice(0, 3);
+const notes = (await getCollection("notes", ({ data }) => data.lang === lang && !data.draft))
+  .sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf()).slice(0, 3);
+---
+
+<BaseLayout lang={lang} alternatePath={lang === "zh" ? "/en/" : "/"}>
+  <section class="hero section-shell">
+    <div class="hero-copy">
+      <p class="eyebrow"><span></span>{t.heroEyebrow}</p>
+      <h1>{t.heroTitle}</h1>
+      <p class="hero-summary">{t.heroSummary}</p>
+      <div class="hero-actions">
+        <a class="button primary" href={pathFor(lang, "projects")}>{t.nav.projects}</a>
+        <a class="button secondary" href={`mailto:${site.email}`}>{t.contact}</a>
+      </div>
+    </div>
+    <aside class="hero-note" aria-label={lang === "zh" ? "个人原则" : "Personal principle"}>
+      <span>01</span>
+      <p>{lang === "zh" ? "独立思考，持续构建。" : "Think independently. Keep building."}</p>
+      <small>R / 2026</small>
+    </aside>
+  </section>
+
+  <section class="content-section section-shell">
+    <div class="section-heading">
+      <div><p class="section-index">02 / WORK</p><h2>{t.projectsTitle}</h2><p>{t.projectsIntro}</p></div>
+      <a class="text-link" href={pathFor(lang, "projects")}>{t.allProjects} <span aria-hidden="true">→</span></a>
+    </div>
+    <div class="project-grid">{projects.map((project) => <ProjectCard project={project} />)}</div>
+  </section>
+
+  <section class="content-section section-shell notes-preview">
+    <div class="section-heading">
+      <div><p class="section-index">03 / NOTES</p><h2>{t.notesTitle}</h2><p>{t.notesIntro}</p></div>
+      <a class="text-link" href={pathFor(lang, "notes")}>{t.allNotes} <span aria-hidden="true">→</span></a>
+    </div>
+    <div class="note-list">{notes.map((note) => <NoteCard note={note} lang={lang} />)}</div>
+  </section>
+</BaseLayout>
