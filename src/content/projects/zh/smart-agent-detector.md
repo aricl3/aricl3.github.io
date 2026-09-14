@@ -2,6 +2,14 @@
 title: "Smart Agent Detector"
 summary: "面向智能合约的可解释 AI 安全分析平台，从代码输入生成有证据支撑的风险判断。"
 role: "创始人 / 技术负责人"
+period: "2026 — 现在"
+domain: "AI Agent · Web3 安全"
+status: "持续迭代"
+metrics:
+  - label: "团队"
+    value: "5 人"
+  - label: "代码贡献"
+    value: "120+ commits"
 stack: ["LangGraph", "FastAPI", "React", "RAG", "AST / IR", "MLflow"]
 highlights:
   - "设计从 ABI、AST/IR 归一化到多智能体验证的分析流程"

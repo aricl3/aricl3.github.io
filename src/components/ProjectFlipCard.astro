@@ -1,0 +1,310 @@
+---
+import type { CollectionEntry } from "astro:content";
+import type { Lang } from "@/data/site";
+
+interface Props {
+  project: CollectionEntry<"projects">;
+  lang: Lang;
+  caseNumber: number;
+}
+
+const { project, lang, caseNumber } = Astro.props;
+const caseLabel = `CASE / ${String(caseNumber).padStart(2, "0")}`;
+const t = lang === "zh" ? {
+  pin: "固定详情",
+  unpin: "收起详情",
+  hint: "悬停预览 · 点击图钉固定",
+  notes: "项目重点",
+  approach: "解决方案",
+  pinned: "项目详情已固定",
+  unpinned: "项目详情已收起"
+} : {
+  pin: "Pin details",
+  unpin: "Close details",
+  hint: "Hover to preview · Pin to keep open",
+  notes: "Case notes",
+  approach: "Approach",
+  pinned: "Project details pinned",
+  unpinned: "Project details closed"
+};
+---
+
+<section class="project-flip-shell" data-project-flip>
+  <button
+    class="project-flip-pin"
+    type="button"
+    aria-pressed="false"
+    aria-label={t.pin}
+    data-label-pin={t.pin}
+    data-label-unpin={t.unpin}
+    data-message-pinned={t.pinned}
+    data-message-unpinned={t.unpinned}
+  >
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M9 3h6l-.7 5 3.2 3.2v1.3h-4.7L12 21l-.8-8.5H6.5v-1.3L9.7 8 9 3Z"></path>
+    </svg>
+    <span>{t.pin}</span>
+  </button>
+
+  <div class="project-flip-stage">
+    <article class="project-flip-face project-flip-front" data-flip-front aria-hidden="false">
+      <div class="project-flip-orbs" aria-hidden="true"><i></i><i></i><i></i></div>
+      <div class="project-flip-front__content">
+        <div class="project-flip-meta">
+          <span>{project.data.role}</span>
+          <span>{project.data.status ?? caseLabel}</span>
+        </div>
+        <div>
+          <p class="project-flip-domain">{project.data.domain ?? project.data.stack.slice(0, 2).join(" · ")}</p>
+          <h3>{project.data.title}</h3>
+          <p class="project-flip-summary">{project.data.summary}</p>
+        </div>
+        <footer>
+          {project.data.metrics.length > 0 && (
+            <div class="project-flip-metrics">
+              {project.data.metrics.map((metric) => <span><small>{metric.label}</small><strong>{metric.value}</strong></span>)}
+            </div>
+          )}
+          <small class="project-flip-hint">{t.hint}</small>
+        </footer>
+      </div>
+    </article>
+
+    <article class="project-flip-face project-flip-back" data-flip-back aria-hidden="true">
+      <div class="project-flip-back__content">
+        <p class="project-flip-kicker">{caseLabel} · {t.notes}</p>
+        <h3>{project.data.title}</h3>
+        <div class="project-flip-approach">
+          <strong>{t.approach}</strong>
+          <ul>{project.data.highlights.slice(0, 3).map((item) => <li>{item}</li>)}</ul>
+        </div>
+        <div class="tag-row" aria-label="Technology stack">
+          {project.data.stack.map((item) => <span>{item}</span>)}
+        </div>
+        {project.data.links.length > 0 && (
+          <div class="project-flip-links">
+            {project.data.links.map((link) => (
+              <a href={link.href} rel="noreferrer" tabindex="-1" data-flip-link>{link.label} <span aria-hidden="true">↗</span></a>
+            ))}
+          </div>
+        )}
+      </div>
+    </article>
+  </div>
+
+  <span class="project-flip-status" aria-live="polite" data-flip-status></span>
+</section>
+
+<script>
+  const flipCards = Array.from(document.querySelectorAll<HTMLElement>("[data-project-flip]"));
+
+  const setRevealed = (card: HTMLElement, revealed: boolean) => {
+    card.classList.toggle("is-revealed", revealed);
+    card.querySelector<HTMLElement>("[data-flip-front]")?.setAttribute("aria-hidden", String(revealed));
+    card.querySelector<HTMLElement>("[data-flip-back]")?.setAttribute("aria-hidden", String(!revealed));
+    card.querySelectorAll<HTMLAnchorElement>("[data-flip-link]").forEach((link) => {
+      link.tabIndex = revealed ? 0 : -1;
+    });
+  };
+
+  const setPinned = (card: HTMLElement, pinned: boolean, announce = true) => {
+    const button = card.querySelector<HTMLButtonElement>(".project-flip-pin");
+    if (!button) return;
+
+    if (pinned) {
+      flipCards.filter((item) => item !== card && item.classList.contains("is-pinned")).forEach((item) => setPinned(item, false, false));
+    }
+
+    card.classList.toggle("is-pinned", pinned);
+    button.setAttribute("aria-pressed", String(pinned));
+    const label = pinned ? button.dataset.labelUnpin : button.dataset.labelPin;
+    if (label) {
+      button.setAttribute("aria-label", label);
+      const text = button.querySelector("span");
+      if (text) text.textContent = label;
+    }
+    setRevealed(card, pinned);
+
+    if (announce) {
+      const status = card.querySelector<HTMLElement>("[data-flip-status]");
+      if (status) status.textContent = pinned ? button.dataset.messagePinned ?? "" : button.dataset.messageUnpinned ?? "";
+    }
+  };
+
+  flipCards.forEach((card) => {
+    const button = card.querySelector<HTMLButtonElement>(".project-flip-pin");
+    if (!button) return;
+
+    card.addEventListener("pointerenter", () => {
+      if (!card.classList.contains("is-pinned") && !card.dataset.suppressHover) setRevealed(card, true);
+    });
+
+    card.addEventListener("pointerleave", () => {
+      delete card.dataset.suppressHover;
+      if (!card.classList.contains("is-pinned")) setRevealed(card, false);
+    });
+
+    button.addEventListener("click", () => {
+      const nextPinned = !card.classList.contains("is-pinned");
+      setPinned(card, nextPinned);
+      if (!nextPinned) card.dataset.suppressHover = "true";
+    });
+
+    card.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && card.classList.contains("is-pinned")) {
+        setPinned(card, false);
+        card.dataset.suppressHover = "true";
+        button.focus();
+      }
+    });
+  });
+</script>
+
+<style>
+  .project-flip-shell {
+    position: relative;
+    overflow: hidden;
+    min-width: 0;
+    min-height: 450px;
+    border-radius: 14px;
+    isolation: isolate;
+    perspective: 1200px;
+  }
+
+  .project-flip-shell::before {
+    position: absolute;
+    inset: -2px;
+    z-index: -2;
+    border-radius: 16px;
+    content: "";
+    opacity: .28;
+    background: conic-gradient(from 20deg, transparent 0 62%, var(--accent), var(--warm), transparent 92%);
+    animation: project-flip-orbit 10s linear infinite;
+  }
+
+  .project-flip-stage {
+    position: absolute;
+    inset: 0;
+    border-radius: 14px;
+    box-shadow: var(--shadow);
+    transform-style: preserve-3d;
+    transition: transform 520ms cubic-bezier(.2,.75,.25,1);
+  }
+
+  .project-flip-shell.is-revealed .project-flip-stage { transform: rotateY(180deg); }
+
+  .project-flip-face {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+
+  .project-flip-front {
+    background: linear-gradient(145deg, var(--paper-raised), color-mix(in srgb, var(--accent-soft) 66%, var(--paper-raised)));
+  }
+
+  .project-flip-front__content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    height: 100%;
+    padding: clamp(1.5rem, 3vw, 2.2rem);
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .project-flip-meta { display: flex; padding-right: 7.5rem; align-items: center; gap: .7rem; color: var(--warm); font-size: .68rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+  .project-flip-meta span + span::before { margin-right: .7rem; content: "·"; }
+  .project-flip-domain { margin: 0 0 .7rem; color: var(--accent); font-size: .72rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+  .project-flip-face h3 { max-width: 520px; margin: 0; font-family: var(--serif); font-size: clamp(2rem, 4vw, 3.2rem); font-weight: 560; letter-spacing: -.04em; line-height: 1.04; }
+  .project-flip-summary { max-width: 560px; margin: 1rem 0 0; color: var(--muted); line-height: 1.65; }
+  .project-flip-front footer { display: flex; align-items: end; justify-content: space-between; gap: 1rem; }
+  .project-flip-metrics { display: flex; flex-wrap: wrap; gap: 1.6rem; }
+  .project-flip-metrics span { display: flex; flex-direction: column; }
+  .project-flip-metrics small, .project-flip-hint { color: var(--muted); font-size: .62rem; font-weight: 750; letter-spacing: .08em; text-transform: uppercase; }
+  .project-flip-metrics strong { color: var(--accent); font-size: 1.1rem; }
+  .project-flip-hint { max-width: 145px; margin-left: auto; text-align: right; }
+
+  .project-flip-orbs { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+  .project-flip-orbs i { position: absolute; border-radius: 50%; filter: blur(24px); opacity: .16; animation: project-flip-float 6s ease-in-out infinite; }
+  .project-flip-orbs i:nth-child(1) { top: 16%; right: 12%; width: 120px; height: 120px; background: var(--accent); }
+  .project-flip-orbs i:nth-child(2) { right: 30%; bottom: -35px; width: 170px; height: 130px; background: var(--warm); animation-delay: -2s; }
+  .project-flip-orbs i:nth-child(3) { top: 48%; left: -30px; width: 90px; height: 90px; background: var(--accent-soft); animation-delay: -4s; }
+
+  .project-flip-back {
+    color: var(--paper);
+    background: color-mix(in srgb, var(--ink) 94%, var(--accent));
+    transform: rotateY(180deg);
+  }
+
+  .project-flip-back::before { position: absolute; inset: 0; content: ""; opacity: .16; background-image: linear-gradient(color-mix(in srgb, var(--accent) 55%, transparent) 1px, transparent 1px), linear-gradient(90deg, color-mix(in srgb, var(--accent) 55%, transparent) 1px, transparent 1px); background-size: 38px 38px; }
+  .project-flip-back__content { position: relative; z-index: 2; display: flex; height: 100%; padding: clamp(1.5rem, 3vw, 2.2rem); flex-direction: column; }
+  .project-flip-back h3 { max-width: calc(100% - 7rem); font-size: clamp(1.7rem, 3vw, 2.45rem); }
+  .project-flip-kicker { margin: 0 0 .7rem; color: var(--warm); font-size: .68rem; font-weight: 800; letter-spacing: .12em; }
+  .project-flip-approach { margin-top: 1.3rem; }
+  .project-flip-approach > strong { color: color-mix(in srgb, var(--paper) 82%, white); font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; }
+  .project-flip-approach ul { padding-left: 1.05rem; margin: .65rem 0 0; color: color-mix(in srgb, var(--paper) 78%, transparent); font-size: .84rem; line-height: 1.55; }
+  .project-flip-approach li + li { margin-top: .38rem; }
+  .project-flip-back .tag-row { margin-top: auto; padding-top: 1rem; }
+  .project-flip-back .tag-row span { border-color: color-mix(in srgb, var(--paper) 24%, transparent); color: color-mix(in srgb, var(--paper) 72%, transparent); }
+  .project-flip-links { margin-top: 1rem; }
+  .project-flip-links a { color: color-mix(in srgb, var(--accent) 35%, white); font-size: .82rem; font-weight: 800; }
+  .project-flip-links a:hover { text-decoration: underline; text-underline-offset: 4px; }
+
+  .project-flip-pin {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    z-index: 5;
+    display: inline-flex;
+    min-height: 36px;
+    padding: .42rem .65rem;
+    align-items: center;
+    gap: .4rem;
+    border: 1px solid color-mix(in srgb, var(--line) 82%, transparent);
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--paper-raised) 88%, transparent);
+    color: var(--ink);
+    box-shadow: 0 8px 20px rgb(47 48 42 / 10%);
+    cursor: pointer;
+    font-size: .68rem;
+    font-weight: 800;
+    backdrop-filter: blur(10px);
+  }
+
+  .project-flip-pin svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.8; }
+  .project-flip-pin[aria-pressed="true"] { border-color: var(--warm); background: var(--warm); color: var(--paper-raised); }
+  .project-flip-pin[aria-pressed="true"] svg { fill: currentColor; }
+  .project-flip-pin:focus-visible { outline: 3px solid var(--warm); outline-offset: 4px; }
+
+  .project-flip-status { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+  @keyframes project-flip-orbit { to { transform: rotate(1turn); } }
+  @keyframes project-flip-float { 0%, 100% { transform: translate3d(0, 0, 0); } 50% { transform: translate3d(0, 10px, 0); } }
+
+  @media (max-width: 640px) {
+    .project-flip-shell { min-height: 520px; }
+    .project-flip-meta { padding-right: 0; flex-direction: column; align-items: start; gap: .15rem; }
+    .project-flip-meta span + span::before { display: none; }
+    .project-flip-face h3 { font-size: 2.15rem; }
+    .project-flip-front footer { align-items: start; flex-direction: column; }
+    .project-flip-hint { margin-left: 0; text-align: left; }
+    .project-flip-back h3 { max-width: 100%; padding-right: 4rem; font-size: 1.75rem; }
+    .project-flip-pin span { display: none; }
+    .project-flip-pin { width: 38px; padding: 0; justify-content: center; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .project-flip-shell::before,
+    .project-flip-orbs i { animation: none; }
+    .project-flip-stage { transform: none !important; transition: none; }
+    .project-flip-face { transform: none; transition: none; }
+    .project-flip-back { opacity: 0; pointer-events: none; }
+    .project-flip-shell.is-revealed .project-flip-front { opacity: 0; pointer-events: none; }
+    .project-flip-shell.is-revealed .project-flip-back { opacity: 1; pointer-events: auto; }
+  }
+</style>

@@ -2,6 +2,8 @@
 title: "LLM-based XML Code Generator"
 summary: "A production-oriented code-generation tool spanning dataset preparation, fine-tuning, prompt refinement, and evaluation."
 role: "AI Project Engineer"
+domain: "Code Generation · Fine-tuning"
+status: "Internal adoption"
 stack: ["Qwen", "LoRA", "SFT", "Prompt engineering", "BLEU"]
 highlights:
   - "Worked across training-data preparation, fine-tuning experiments, and generation-quality analysis"

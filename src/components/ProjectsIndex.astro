@@ -1,7 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import ProjectCard from "@/components/ProjectCard.astro";
+import ProjectFlipCard from "@/components/ProjectFlipCard.astro";
 import { copy, type Lang } from "@/data/site";
 interface Props { lang: Lang }
 const { lang } = Astro.props;
@@ -16,6 +16,10 @@ const projects = (await getCollection("projects", ({ data }) => data.lang === la
     <p>{t.projectsIntro}</p>
   </header>
   <section class="section-shell page-content">
-    <div class="project-grid full">{projects.map((project) => <ProjectCard project={project} />)}</div>
+    <div class="project-grid full">
+      {projects.map((project, index) => (
+        <ProjectFlipCard project={project} lang={lang} caseNumber={index + 1} />
+      ))}
+    </div>
   </section>
 </BaseLayout>

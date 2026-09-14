@@ -1,0 +1,103 @@
+<span class="rocky-sprite" aria-hidden="true">
+  <span class="rocky-sprite__body">
+    <span class="rocky-sprite__eye rocky-sprite__eye--left"><i></i></span>
+    <span class="rocky-sprite__eye rocky-sprite__eye--right"><i></i></span>
+    <strong>R</strong>
+  </span>
+  <span class="rocky-sprite__shadow"></span>
+</span>
+
+<style>
+  .rocky-sprite {
+    position: relative;
+    display: block;
+    width: 76px;
+    height: 88px;
+    filter: drop-shadow(0 10px 12px rgb(66 48 38 / 14%));
+  }
+
+  .rocky-sprite__body {
+    position: absolute;
+    inset: 0 0 12px;
+    display: block;
+    background: var(--warm);
+    clip-path: polygon(14% 0, 86% 0, 86% 8%, 94% 8%, 94% 18%, 100% 18%, 100% 84%, 88% 84%, 88% 94%, 74% 94%, 74% 84%, 61% 84%, 61% 96%, 46% 96%, 46% 84%, 32% 84%, 32% 94%, 17% 94%, 17% 84%, 0 84%, 0 18%, 6% 18%, 6% 8%, 14% 8%);
+    animation: rocky-float 1.8s steps(2, end) infinite;
+  }
+
+  .rocky-sprite__eye {
+    position: absolute;
+    top: 21px;
+    width: 20px;
+    height: 26px;
+    background: var(--paper-raised);
+  }
+
+  .rocky-sprite__eye--left { left: 14px; }
+  .rocky-sprite__eye--right { right: 14px; }
+
+  .rocky-sprite__eye i {
+    position: absolute;
+    top: 10px;
+    left: 4px;
+    width: 8px;
+    height: 10px;
+    background: var(--accent);
+    animation: rocky-look 5s steps(2, end) infinite;
+  }
+
+  .rocky-sprite strong {
+    position: absolute;
+    right: 0;
+    bottom: 12px;
+    left: 0;
+    color: color-mix(in srgb, var(--paper-raised) 92%, transparent);
+    font-family: var(--serif);
+    font-size: 15px;
+    text-align: center;
+  }
+
+  .rocky-sprite__shadow {
+    position: absolute;
+    right: 12px;
+    bottom: 0;
+    left: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--ink) 24%, transparent);
+    filter: blur(5px);
+    animation: rocky-shadow 1.8s steps(2, end) infinite;
+  }
+
+  @keyframes rocky-float {
+    0%, 49% { transform: translateY(0); }
+    50%, 100% { transform: translateY(-5px); }
+  }
+
+  @keyframes rocky-look {
+    0%, 44%, 100% { transform: translateX(0); }
+    45%, 74% { transform: translateX(4px); }
+    75%, 94% { transform: translateX(-2px); }
+  }
+
+  @keyframes rocky-shadow {
+    0%, 49% { opacity: .24; transform: scaleX(1); }
+    50%, 100% { opacity: .14; transform: scaleX(.82); }
+  }
+
+  @media (max-width: 640px) {
+    .rocky-sprite { width: 52px; height: 62px; }
+    .rocky-sprite__body { bottom: 9px; }
+    .rocky-sprite__eye { top: 15px; width: 14px; height: 18px; }
+    .rocky-sprite__eye--left { left: 10px; }
+    .rocky-sprite__eye--right { right: 10px; }
+    .rocky-sprite__eye i { top: 7px; left: 3px; width: 6px; height: 7px; }
+    .rocky-sprite strong { bottom: 8px; font-size: 11px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .rocky-sprite__body,
+    .rocky-sprite__eye i,
+    .rocky-sprite__shadow { animation: none; }
+  }
+</style>

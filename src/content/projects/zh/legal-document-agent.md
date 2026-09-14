@@ -2,6 +2,8 @@
 title: "法律文档智能体工作流"
 summary: "面向法律内容生成、上传文档处理和质量评测的智能体模块。"
 role: "数据科学家"
+domain: "法律科技 · 生成式 AI"
+status: "生产交付"
 stack: ["LangGraph", "DSPy", "RAG", "LLM 评测", "API 集成"]
 highlights:
   - "参与从需求澄清到生产交付的完整流程"

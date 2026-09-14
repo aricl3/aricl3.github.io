@@ -2,6 +2,8 @@
 title: "Legal Document Agent Workflow"
 summary: "Agent modules for legal content generation, uploaded-document handling, and quality evaluation."
 role: "Data Scientist"
+domain: "Legal Tech · Generative AI"
+status: "Production delivery"
 stack: ["LangGraph", "DSPy", "RAG", "LLM evaluation", "API integration"]
 highlights:
   - "Contributed across the full path from requirement discovery to production delivery"
