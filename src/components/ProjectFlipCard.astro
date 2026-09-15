@@ -98,22 +98,17 @@ const t = lang === "zh" ? {
 <script>
   const flipCards = Array.from(document.querySelectorAll<HTMLElement>("[data-project-flip]"));
 
-  const setRevealed = (card: HTMLElement, revealed: boolean) => {
-    card.classList.toggle("is-revealed", revealed);
-    card.querySelector<HTMLElement>("[data-flip-front]")?.setAttribute("aria-hidden", String(revealed));
-    card.querySelector<HTMLElement>("[data-flip-back]")?.setAttribute("aria-hidden", String(!revealed));
+  const setPinnedAccessibility = (card: HTMLElement, pinned: boolean) => {
+    card.querySelector<HTMLElement>("[data-flip-front]")?.setAttribute("aria-hidden", String(pinned));
+    card.querySelector<HTMLElement>("[data-flip-back]")?.setAttribute("aria-hidden", String(!pinned));
     card.querySelectorAll<HTMLAnchorElement>("[data-flip-link]").forEach((link) => {
-      link.tabIndex = revealed ? 0 : -1;
+      link.tabIndex = pinned ? 0 : -1;
     });
   };
 
   const setPinned = (card: HTMLElement, pinned: boolean, announce = true) => {
     const button = card.querySelector<HTMLButtonElement>(".project-flip-pin");
     if (!button) return;
-
-    if (pinned) {
-      flipCards.filter((item) => item !== card && item.classList.contains("is-pinned")).forEach((item) => setPinned(item, false, false));
-    }
 
     card.classList.toggle("is-pinned", pinned);
     button.setAttribute("aria-pressed", String(pinned));
@@ -123,7 +118,7 @@ const t = lang === "zh" ? {
       const text = button.querySelector("span");
       if (text) text.textContent = label;
     }
-    setRevealed(card, pinned);
+    setPinnedAccessibility(card, pinned);
 
     if (announce) {
       const status = card.querySelector<HTMLElement>("[data-flip-status]");
@@ -135,25 +130,14 @@ const t = lang === "zh" ? {
     const button = card.querySelector<HTMLButtonElement>(".project-flip-pin");
     if (!button) return;
 
-    card.addEventListener("pointerenter", () => {
-      if (!card.classList.contains("is-pinned") && !card.dataset.suppressHover) setRevealed(card, true);
-    });
-
-    card.addEventListener("pointerleave", () => {
-      delete card.dataset.suppressHover;
-      if (!card.classList.contains("is-pinned")) setRevealed(card, false);
-    });
-
     button.addEventListener("click", () => {
       const nextPinned = !card.classList.contains("is-pinned");
       setPinned(card, nextPinned);
-      if (!nextPinned) card.dataset.suppressHover = "true";
     });
 
     card.addEventListener("keydown", (event) => {
       if (event.key === "Escape" && card.classList.contains("is-pinned")) {
         setPinned(card, false);
-        card.dataset.suppressHover = "true";
         button.focus();
       }
     });
@@ -167,6 +151,7 @@ const t = lang === "zh" ? {
     min-width: 0;
     min-height: 450px;
     border-radius: 14px;
+    background: var(--paper-raised);
     isolation: isolate;
     perspective: 1200px;
   }
@@ -191,7 +176,7 @@ const t = lang === "zh" ? {
     transition: transform 520ms cubic-bezier(.2,.75,.25,1);
   }
 
-  .project-flip-shell.is-revealed .project-flip-stage { transform: rotateY(180deg); }
+  .project-flip-shell.is-pinned .project-flip-stage { transform: rotateY(180deg); }
 
   .project-flip-face {
     position: absolute;
@@ -286,6 +271,10 @@ const t = lang === "zh" ? {
   @keyframes project-flip-orbit { to { transform: rotate(1turn); } }
   @keyframes project-flip-float { 0%, 100% { transform: translate3d(0, 0, 0); } 50% { transform: translate3d(0, 10px, 0); } }
 
+  @media (hover: hover) and (pointer: fine) {
+    .project-flip-shell:hover .project-flip-stage { transform: rotateY(180deg); }
+  }
+
   @media (max-width: 640px) {
     .project-flip-shell { min-height: 520px; }
     .project-flip-meta { padding-right: 0; flex-direction: column; align-items: start; gap: .15rem; }
@@ -304,7 +293,12 @@ const t = lang === "zh" ? {
     .project-flip-stage { transform: none !important; transition: none; }
     .project-flip-face { transform: none; transition: none; }
     .project-flip-back { opacity: 0; pointer-events: none; }
-    .project-flip-shell.is-revealed .project-flip-front { opacity: 0; pointer-events: none; }
-    .project-flip-shell.is-revealed .project-flip-back { opacity: 1; pointer-events: auto; }
+    .project-flip-shell.is-pinned .project-flip-front { opacity: 0; pointer-events: none; }
+    .project-flip-shell.is-pinned .project-flip-back { opacity: 1; pointer-events: auto; }
+  }
+
+  @media (prefers-reduced-motion: reduce) and (hover: hover) and (pointer: fine) {
+    .project-flip-shell:hover .project-flip-front { opacity: 0; pointer-events: none; }
+    .project-flip-shell:hover .project-flip-back { opacity: 1; pointer-events: auto; }
   }
 </style>

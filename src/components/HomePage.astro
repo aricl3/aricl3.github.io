@@ -4,7 +4,6 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
 import CasePassCard from "@/components/CasePassCard.astro";
 import NoteCard from "@/components/NoteCard.astro";
 import ProfileDepthCard from "@/components/ProfileDepthCard.astro";
-import ProjectCard from "@/components/ProjectCard.astro";
 import { copy, pathFor, site, type Lang } from "@/data/site";
 
 interface Props { lang: Lang }
@@ -36,10 +35,7 @@ const notes = (await getCollection("notes", ({ data }) => data.lang === lang && 
       <a class="text-link" href={pathFor(lang, "projects")}>{t.allProjects} <span aria-hidden="true">→</span></a>
     </div>
     <div class="project-showcase">
-      {projects[0] && <CasePassCard project={projects[0]} lang={lang} index={1} />}
-      <div class="project-showcase__quiet">
-        {projects.slice(1).map((project) => <ProjectCard project={project} />)}
-      </div>
+      {projects.map((project, index) => <CasePassCard project={project} lang={lang} index={index + 1} />)}
     </div>
   </section>
 
@@ -55,18 +51,16 @@ const notes = (await getCollection("notes", ({ data }) => data.lang === lang && 
 <style>
   .project-showcase {
     display: grid;
-    grid-template-columns: minmax(0, .92fr) minmax(0, 1.08fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 1rem;
     align-items: stretch;
   }
 
-  .project-showcase__quiet {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1rem;
+  @media (max-width: 1100px) {
+    .project-showcase { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
 
-  @media (max-width: 900px) {
+  @media (max-width: 720px) {
     .project-showcase { grid-template-columns: 1fr; }
   }
 </style>
