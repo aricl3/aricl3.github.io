@@ -39,6 +39,13 @@ const alternate = new URL(alternatePath ?? fallbackAlternate, site.domain);
     <meta name="description" content={pageDescription} />
     <meta name="theme-color" content="#f5f1e8" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    {lang === "zh" && (
+      <>
+        <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin="anonymous" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Regular.min.css" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Semibold.min.css" />
+      </>
+    )}
     <link rel="canonical" href={canonical} />
     <link rel="alternate" hreflang={otherLang === "zh" ? "zh-CN" : "en"} href={alternate} />
     <link rel="alternate" type="application/rss+xml" title={`${site.name} RSS`} href={lang === "zh" ? "/rss.xml" : "/en/rss.xml"} />

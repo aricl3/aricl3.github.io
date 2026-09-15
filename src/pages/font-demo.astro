@@ -1,0 +1,181 @@
+---
+import "@/styles/global.css";
+
+const options = [
+  {
+    id: "a",
+    label: "A",
+    name: "刀刻未来",
+    fonts: "阿里妈妈刀隶体 + MiSans",
+    note: "古碑刀刻感与 AI 主题形成反差，锋利、有力量，品牌辨识度最高。"
+  },
+  {
+    id: "b",
+    label: "B",
+    name: "手绘人格",
+    fonts: "小赖字体 + MiSans",
+    note: "不规则手写轮廓更像独立创作者，亲近但不会像常规楷体。"
+  },
+  {
+    id: "c",
+    label: "C",
+    name: "数字原生",
+    fonts: "缝合像素字体 + MiSans",
+    note: "直接呼应智能体、代码和 Rocky 小宠物，最实验，也最不像模板网站。"
+  }
+] as const;
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="robots" content="noindex" />
+    <title>中文字体对比 · Rocky</title>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource-variable/inter@5.2.8/index.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cn-fontsource-xiaolai-sc-regular@1.0.2/font.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Regular.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/misans@4.1.0/lib/Normal/MiSans-Semibold.min.css" />
+  </head>
+  <body class="font-demo-page">
+    <main>
+      <header class="demo-intro">
+        <a href="/">← 返回网站</a>
+        <p>TYPOGRAPHY TEST / 中文字体</p>
+        <h1>哪一种更像 Rocky？</h1>
+        <span>这次只看非常规展示字体。正文统一用中性字体，差异集中在品牌标题与项目名。</span>
+      </header>
+
+      <h2 class="demo-group-title featured">UNCOMMON DISPLAY TYPE</h2>
+      <section class="demo-grid" aria-label="非常规字体方案对比">
+        {options.map((option) => (
+          <label class={`font-option option-${option.id}`}>
+            <input type="radio" name="font-choice" value={option.id} />
+            <span class="choice-marker" aria-hidden="true">{option.label}</span>
+            <span class="choice-state">选择这套</span>
+
+            <span class="option-meta">{option.name} · {option.fonts}</span>
+            <strong class="sample-title">把模糊的 AI 想法，变成可靠的产品系统。</strong>
+            <span class="sample-summary">我专注于 AI Agent、RAG、LLM 评测与 Web3 安全，喜欢把研究、工程和产品判断连接起来。</span>
+
+            <span class="mini-card">
+              <small>SELECTED PROJECT / 01</small>
+              <b>智能体安全检测平台</b>
+              <span>让复杂系统能够被解释、验证和持续改进。</span>
+              <i>AI AGENT　·　SECURITY　·　EVALUATION</i>
+            </span>
+
+            <span class="option-note">{option.note}</span>
+          </label>
+        ))}
+      </section>
+    </main>
+  </body>
+</html>
+
+<style>
+  @font-face {
+    font-family: "Alimama DaoLiTi";
+    src: url("https://cdn.jsdelivr.net/npm/@fontpkg/alimama-dao-li-ti@1.0.5/AlimamaDaoLiTi.woff2") format("woff2");
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "Fusion Pixel";
+    src: url("https://fusion-pixel-font.takwolf.com/fusion-pixel-12px-proportional-zh_hans.otf.woff2") format("woff2");
+    font-display: swap;
+  }
+
+  .font-demo-page {
+    min-height: 100vh;
+    background: var(--paper);
+  }
+
+  .font-demo-page main {
+    width: min(1180px, calc(100% - 2rem));
+    margin-inline: auto;
+    padding: clamp(2rem, 5vw, 4.5rem) 0;
+  }
+
+  .demo-intro { margin-bottom: 2rem; }
+  .demo-intro a { color: var(--accent); font: 700 .78rem Inter, sans-serif; }
+  .demo-intro p { margin: 2.5rem 0 .45rem; color: var(--warm); font: 800 .7rem Inter, sans-serif; letter-spacing: .15em; }
+  .demo-intro h1 { margin: 0; font: 520 clamp(2rem, 5vw, 3.7rem)/1.12 MiSans, sans-serif; letter-spacing: -.03em; }
+  .demo-intro > span { display: block; margin-top: .7rem; color: var(--muted); font: 400 .92rem/1.7 MiSans, sans-serif; }
+  .demo-group-title { margin: 0 0 .8rem; color: var(--muted); font: 750 .72rem Inter, sans-serif; letter-spacing: .12em; text-transform: uppercase; }
+  .demo-group-title.featured { margin-top: 2.5rem; color: var(--warm); }
+
+  .demo-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .font-option {
+    position: relative;
+    display: flex;
+    min-width: 0;
+    padding: clamp(1.25rem, 2.5vw, 2rem);
+    flex-direction: column;
+    border: 1px solid var(--line);
+    background: var(--paper-raised);
+    box-shadow: 0 12px 35px rgb(47 48 42 / 5%);
+    cursor: pointer;
+    transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease;
+  }
+
+  .font-option:hover { box-shadow: var(--shadow); transform: translateY(-3px); }
+  .font-option:has(input:focus-visible) { outline: 3px solid var(--warm); outline-offset: 4px; }
+  .font-option:has(input:checked) { border-color: var(--accent); box-shadow: inset 0 0 0 2px var(--accent), var(--shadow); }
+  .font-option input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+
+  .choice-marker {
+    display: grid;
+    width: 2.35rem;
+    height: 2.35rem;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--ink);
+    color: var(--paper);
+    font: 650 1rem Inter, sans-serif;
+  }
+
+  .choice-state { position: absolute; top: 1.7rem; right: 1.7rem; color: var(--muted); font: 650 .72rem Inter, sans-serif; }
+  .font-option:has(input:checked) .choice-state { color: var(--accent); }
+  .font-option:has(input:checked) .choice-state::after { content: " ✓"; }
+  .option-meta { min-height: 2.2em; margin-top: 2.3rem; color: var(--warm); font-size: .68rem; font-weight: 750; letter-spacing: .08em; }
+  .sample-title { display: block; margin-top: .85rem; font-size: clamp(2rem, 3.7vw, 3.15rem); font-weight: 520; letter-spacing: -.01em; line-height: 1.14; }
+  .sample-summary { display: block; margin-top: 1.35rem; color: var(--muted); font-size: .95rem; line-height: 1.8; }
+
+  .mini-card { display: flex; min-height: 180px; margin-top: 2rem; padding: 1.15rem; flex-direction: column; border: 1px solid var(--line); background: var(--paper); }
+  .mini-card small { color: var(--warm); font-size: .58rem; font-weight: 750; letter-spacing: .09em; }
+  .mini-card b { margin-top: .7rem; font-size: 1.25rem; font-weight: 600; line-height: 1.35; }
+  .mini-card > span { margin-top: .45rem; color: var(--muted); font-size: .8rem; line-height: 1.65; }
+  .mini-card i { margin-top: auto; padding-top: .8rem; color: var(--accent); font: normal 700 .55rem/1.5 Inter, sans-serif; letter-spacing: .08em; }
+  .option-note { display: block; margin-top: 1.2rem; color: var(--muted); font-size: .78rem; line-height: 1.6; }
+
+  .option-a { font-family: MiSans, sans-serif; }
+  .option-a .sample-title, .option-a .mini-card b { font-family: "Alimama DaoLiTi", fantasy; font-weight: 400; }
+  .option-a .sample-title { color: var(--accent); font-size: clamp(2.35rem, 4.3vw, 3.55rem); letter-spacing: .025em; line-height: 1.13; }
+
+  .option-b { font-family: MiSans, sans-serif; }
+  .option-b .sample-title, .option-b .mini-card b { font-family: "Xiaolai SC", cursive; font-weight: 400; }
+  .option-b .sample-title { letter-spacing: .02em; line-height: 1.22; transform: rotate(-1deg); transform-origin: left center; }
+
+  .option-c { font-family: MiSans, sans-serif; }
+  .option-c .sample-title, .option-c .mini-card b { font-family: "Fusion Pixel", monospace; font-weight: 400; }
+  .option-c .sample-title { font-size: clamp(1.75rem, 3.25vw, 2.65rem); letter-spacing: .035em; line-height: 1.34; }
+  .option-c .mini-card small, .option-c .mini-card i { font-family: "Fusion Pixel", monospace; }
+
+  @media (max-width: 860px) {
+    .demo-grid { grid-template-columns: 1fr; }
+    .font-option { min-height: auto; }
+    .option-meta { min-height: 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .font-option { transition: none; }
+  }
+</style>

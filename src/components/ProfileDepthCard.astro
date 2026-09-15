@@ -151,9 +151,14 @@ const text = lang === "zh" ? {
   .profile-depth-principle {
     max-width: 190px;
     margin: .55rem 0 0;
-    font-family: var(--serif);
+    font-family: var(--display);
     font-size: 1.55rem;
     line-height: 1.35;
+  }
+
+  :global(html:lang(zh-CN)) .profile-depth-principle {
+    font-weight: 400;
+    letter-spacing: .02em;
   }
 
   .profile-depth-links {

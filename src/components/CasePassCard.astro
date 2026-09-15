@@ -113,7 +113,8 @@ const projectCode = project.data.translationKey.split("-").map((part) => part[0]
   .case-pass__brand { display: flex; align-items: center; gap: .55rem; font-size: .78rem; font-weight: 850; letter-spacing: .08em; }
   .case-pass__brand i { display: grid; width: 28px; height: 28px; border-radius: 50%; place-items: center; background: var(--ink); color: var(--paper); font-family: var(--serif); font-style: normal; }
   .case-pass__type { padding: .3rem .65rem; border: 1px solid var(--warm); border-radius: 999px; color: var(--warm); font-size: .62rem; font-weight: 800; letter-spacing: .14em; }
-  .case-pass h3 { max-width: 430px; margin: 0; font-family: var(--serif); font-size: clamp(1.85rem, 3.4vw, 3rem); font-weight: 560; letter-spacing: -.045em; line-height: .98; }
+  .case-pass h3 { max-width: 430px; margin: 0; font-family: var(--display); font-size: clamp(1.85rem, 3.4vw, 3rem); font-weight: 560; letter-spacing: -.045em; line-height: .98; }
+  :global(html:lang(zh-CN)) .case-pass h3 { font-weight: 400; letter-spacing: .02em; line-height: 1.14; }
   .case-pass__summary { max-width: 580px; margin: 1rem 0 2.2rem; color: var(--muted); font-size: .92rem; line-height: 1.55; }
 
   .case-pass__details { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.15rem 1.5rem; }
