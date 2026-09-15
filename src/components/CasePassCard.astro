@@ -9,7 +9,12 @@ interface Props {
 }
 
 const { project, lang, index = 1 } = Astro.props;
-const viewLabel = lang === "zh" ? "查看案例" : "View case";
+const projectSlug = project.id.split("/").at(-1);
+const detailPath = pathFor(lang, `projects/${projectSlug}/`);
+const destination = project.data.caseStudy ? detailPath : pathFor(lang, "projects");
+const viewLabel = project.data.caseStudy
+  ? (lang === "zh" ? "查看案例" : "View case")
+  : (lang === "zh" ? "查看项目" : "View project");
 const labels = lang === "zh"
   ? { role: "角色", period: "周期", domain: "领域", status: "状态" }
   : { role: "Role", period: "Period", domain: "Domain", status: "Status" };
@@ -17,7 +22,7 @@ const caseNumber = String(index).padStart(2, "0");
 const projectCode = project.data.translationKey.split("-").map((part) => part[0]).join("").slice(0, 4).toUpperCase();
 ---
 
-<a class="case-pass-shell" href={pathFor(lang, "projects")} aria-label={`${viewLabel}: ${project.data.title}`}>
+<a class="case-pass-shell" href={destination} aria-label={`${viewLabel}: ${project.data.title}`}>
   <article class="case-pass">
     <div class="case-pass__main">
       <div class="case-pass__grid" aria-hidden="true"></div>

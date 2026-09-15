@@ -34,6 +34,7 @@ const projects = defineCollection({
     lang: language,
     translationKey: z.string(),
     featured: z.boolean().default(false),
+    caseStudy: z.boolean().default(false),
     order: z.number().default(99)
   })
 });

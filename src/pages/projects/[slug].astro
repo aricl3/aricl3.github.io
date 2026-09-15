@@ -1,0 +1,18 @@
+---
+import { getCollection, type CollectionEntry } from "astro:content";
+import ProjectDetail from "@/components/ProjectDetail.astro";
+
+export async function getStaticPaths() {
+  const all = await getCollection("projects");
+  return all.filter((project) => project.data.lang === "zh" && project.data.caseStudy).map((project) => {
+    const paired = all.find((candidate) => candidate.data.lang === "en" && candidate.data.translationKey === project.data.translationKey && candidate.data.caseStudy);
+    const alternatePath = paired ? `/en/projects/${paired.id.split("/").at(-1)}/` : "/en/projects/";
+    return { params: { slug: project.id.split("/").at(-1) }, props: { project, alternatePath } };
+  });
+}
+
+interface Props { project: CollectionEntry<"projects">; alternatePath: string }
+const { project, alternatePath } = Astro.props;
+---
+
+<ProjectDetail project={project} lang="zh" alternatePath={alternatePath} />
