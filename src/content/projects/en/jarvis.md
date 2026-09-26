@@ -76,3 +76,8 @@ Jarvis remains a **private build in active development**; its source repository 
 - Stronger execution isolation and provenance-aware context projection
 
 The current terminal restrictions are best-effort application safeguards, not an operating-system sandbox. The next phase is to evolve Jarvis from a useful personal agent into a **work system that is observable, recoverable, and auditable**.
+
+## Related notes
+
+- [A local agent that actually stops: the approval path from model to UI](/en/notes/stoppable-local-agent/)
+- [A complete chat history should not be the model context](/en/notes/archive-vs-active-context/)
