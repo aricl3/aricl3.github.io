@@ -76,6 +76,23 @@ const caseNumber = String(project.data.order).padStart(2, "0");
     text-decoration-thickness: .16em;
     text-underline-offset: .18em;
   }
+  .project-detail :global(.prose p:has(> img)) {
+    margin: 2rem 0 .65rem;
+  }
+  .project-detail :global(.prose p:has(> img) img) {
+    display: block;
+    width: 100%;
+    border: 1px solid var(--line);
+    border-radius: 5px;
+    box-shadow: var(--shadow);
+  }
+  .project-detail :global(.prose p:has(> img) + p:has(> em:only-child)) {
+    margin-top: 0;
+    color: var(--muted);
+    font-family: var(--sans);
+    font-size: .82rem;
+    text-align: center;
+  }
 
   @media (max-width: 700px) {
     .project-detail__facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); text-align: left; }

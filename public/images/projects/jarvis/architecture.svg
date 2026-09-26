@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="860" viewBox="0 0 1400 860" role="img" aria-labelledby="title desc">
+  <title id="title">Jarvis current architecture</title>
+  <desc id="desc">A local-first agent architecture showing the React interface, FastAPI streaming layer, Pydantic AI agent, approval gate, context manager, capability modules, SQLite archive, local workspace, web services, and MCP integrations.</desc>
+  <defs>
+    <linearGradient id="paper" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f7f0e5"/>
+      <stop offset="1" stop-color="#efe3d3"/>
+    </linearGradient>
+    <linearGradient id="core" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#163e43"/>
+      <stop offset="1" stop-color="#245b60"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#17363a" flood-opacity=".12"/>
+    </filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#446267"/>
+    </marker>
+    <style>
+      .label { font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #17363a; }
+      .title { font-size: 42px; font-weight: 700; letter-spacing: -1px; }
+      .subtitle { font-size: 19px; fill: #5d7477; }
+      .box-title { font-size: 22px; font-weight: 700; }
+      .box-copy { font-size: 16px; fill: #5d7477; }
+      .core-title { font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: 23px; font-weight: 700; fill: #fffaf3; }
+      .core-copy { font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: 16px; fill: #dce9e8; }
+      .eyebrow { font-size: 14px; font-weight: 700; letter-spacing: 2px; fill: #b45b3f; }
+      .line { fill: none; stroke: #446267; stroke-width: 3; marker-end: url(#arrow); }
+      .line-dashed { fill: none; stroke: #8a9b9d; stroke-width: 2.5; stroke-dasharray: 9 8; marker-end: url(#arrow); }
+    </style>
+  </defs>
+
+  <rect width="1400" height="860" rx="34" fill="url(#paper)"/>
+  <path d="M0 126H1400" stroke="#d4c5b4"/>
+  <text class="label eyebrow" x="70" y="55">CURRENT IMPLEMENTATION</text>
+  <text class="label title" x="70" y="101">Jarvis · local-first work execution loop</text>
+  <text class="label subtitle" x="1330" y="83" text-anchor="end">Visible · interruptible · traceable</text>
+
+  <g filter="url(#shadow)">
+    <rect x="70" y="190" width="250" height="150" rx="20" fill="#fffaf3" stroke="#cdbca9" stroke-width="2"/>
+    <text class="label box-title" x="100" y="235">React interface</text>
+    <text class="label box-copy" x="100" y="272">Conversation &amp; streaming state</text>
+    <text class="label box-copy" x="100" y="301">Model / search selection</text>
+    <text class="label box-copy" x="100" y="330">Approve or deny actions</text>
+
+    <rect x="435" y="174" width="530" height="182" rx="24" fill="url(#core)"/>
+    <text class="core-title" x="475" y="222">FastAPI SSE + Pydantic AI agent</text>
+    <text class="core-copy" x="475" y="260">Streams execution state and assembles per-turn tools</text>
+    <rect x="475" y="286" width="204" height="42" rx="21" fill="#fffaf3" fill-opacity=".12" stroke="#fffaf3" stroke-opacity=".35"/>
+    <text class="core-copy" x="577" y="313" text-anchor="middle">Local Ollama model</text>
+    <rect x="700" y="286" width="225" height="42" rx="21" fill="#fffaf3" fill-opacity=".12" stroke="#fffaf3" stroke-opacity=".35"/>
+    <text class="core-copy" x="812" y="313" text-anchor="middle">Cloud model slot</text>
+
+    <rect x="1080" y="190" width="250" height="150" rx="20" fill="#fffaf3" stroke="#cdbca9" stroke-width="2"/>
+    <text class="label box-title" x="1110" y="235">Context manager</text>
+    <text class="label box-copy" x="1110" y="272">Bounded active history</text>
+    <text class="label box-copy" x="1110" y="301">Auto / manual compaction</text>
+    <text class="label box-copy" x="1110" y="330">Full archive remains intact</text>
+  </g>
+
+  <path class="line" d="M320 265H423"/>
+  <path class="line" d="M965 265H1068"/>
+  <path class="line" d="M1078 302C1020 388 927 407 855 407"/>
+
+  <g filter="url(#shadow)">
+    <rect x="435" y="405" width="530" height="108" rx="22" fill="#b45b3f"/>
+    <text x="475" y="451" font-family="Inter, -apple-system, sans-serif" font-size="23" font-weight="700" fill="#fffaf3">Approval gate</text>
+    <text x="475" y="484" font-family="Inter, -apple-system, sans-serif" font-size="16" fill="#fae5db">Side-effecting tool calls pause before execution</text>
+  </g>
+  <path class="line" d="M700 356V393"/>
+  <path class="line-dashed" d="M435 459C350 459 306 403 251 348"/>
+
+  <text class="label eyebrow" x="70" y="582">PLUGGABLE CAPABILITIES</text>
+
+  <g filter="url(#shadow)">
+    <rect x="70" y="615" width="230" height="115" rx="18" fill="#fffaf3" stroke="#cdbca9" stroke-width="2"/>
+    <text class="label box-title" x="100" y="660">Search</text>
+    <text class="label box-copy" x="100" y="692">Multi-engine recovery loop</text>
+
+    <rect x="330" y="615" width="230" height="115" rx="18" fill="#fffaf3" stroke="#cdbca9" stroke-width="2"/>
+    <text class="label box-title" x="360" y="660">Files &amp; coder</text>
+    <text class="label box-copy" x="360" y="692">Workspace-bound tools</text>
+
+    <rect x="590" y="615" width="230" height="115" rx="18" fill="#fffaf3" stroke="#cdbca9" stroke-width="2"/>
+    <text class="label box-title" x="620" y="660">Documents</text>
+    <text class="label box-copy" x="620" y="692">Read and export artifacts</text>
+
+    <rect x="850" y="615" width="230" height="115" rx="18" fill="#fffaf3" stroke="#cdbca9" stroke-width="2"/>
+    <text class="label box-title" x="880" y="660">Skills</text>
+    <text class="label box-copy" x="880" y="692">On-demand procedures</text>
+
+    <rect x="1110" y="615" width="220" height="115" rx="18" fill="#fffaf3" stroke="#cdbca9" stroke-width="2"/>
+    <text class="label box-title" x="1140" y="660">MCP</text>
+    <text class="label box-copy" x="1140" y="692">Mac and external tools</text>
+  </g>
+
+  <path class="line" d="M700 513V568H185V603"/>
+  <path class="line" d="M700 568H445V603"/>
+  <path class="line" d="M700 568V603"/>
+  <path class="line" d="M700 568H965V603"/>
+  <path class="line" d="M700 568H1220V603"/>
+
+  <rect x="70" y="786" width="1260" height="1" fill="#d4c5b4"/>
+  <text class="label box-copy" x="70" y="822">Persistence: SQLite conversations, memory and FTS</text>
+  <text class="label box-copy" x="1330" y="822" text-anchor="end">Boundary: local workspace + explicit integrations</text>
+</svg>
