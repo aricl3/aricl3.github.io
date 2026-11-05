@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
+import OfficeMateCard from "@/components/OfficeMateCard.astro";
 import { copy, site, type Lang } from "@/data/site";
 interface Props { lang: Lang }
 const { lang } = Astro.props;
@@ -42,5 +43,6 @@ const experience = lang === "zh" ? [
       <h2>{t.values}</h2>
       <ol class="value-list">{t.valueItems.map((item, index) => <li><span>0{index + 1}</span><p>{item}</p></li>)}</ol>
     </section>
+    <OfficeMateCard lang={lang} />
   </div>
 </BaseLayout>
