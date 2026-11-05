@@ -1,0 +1,85 @@
+---
+import { copy, type Lang } from "@/data/site";
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const mate = copy[lang].officeMate;
+---
+
+<section class="office-mate" aria-labelledby="office-mate-title">
+  <figure class="office-mate-frame">
+    <img
+      src="/images/about/cat-hero.webp"
+      alt={mate.alt}
+      width="1600"
+      height="1200"
+      loading="lazy"
+      decoding="async"
+    />
+  </figure>
+  <div class="office-mate-copy">
+    <p class="office-mate-role">{mate.role}</p>
+    <h2 id="office-mate-title">{mate.title}</h2>
+    <p class="office-mate-body">{mate.body}</p>
+  </div>
+</section>
+
+<style>
+  .office-mate {
+    display: grid;
+    grid-column: 1 / -1;
+    grid-template-columns: minmax(0, 1.2fr) minmax(16rem, 0.8fr);
+    gap: clamp(1.4rem, 3.5vw, 2.8rem);
+    align-items: center;
+  }
+
+  .office-mate-frame {
+    margin: 0;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    background: color-mix(in srgb, var(--paper-raised) 88%, var(--accent-soft));
+  }
+
+  .office-mate-frame img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    object-position: 46% 58%;
+  }
+
+  .office-mate-copy {
+    max-width: 28rem;
+  }
+
+  .office-mate-role {
+    margin: 0 0 1.2rem;
+    color: var(--warm);
+    font-size: .72rem;
+    font-weight: 800;
+    letter-spacing: .09em;
+    text-transform: uppercase;
+  }
+
+  .office-mate-body {
+    margin: 0;
+    max-width: 36ch;
+  }
+
+  :global(html:lang(zh-CN)) .office-mate h2 {
+    font-weight: 400;
+    letter-spacing: .02em;
+  }
+
+  @media (max-width: 720px) {
+    .office-mate {
+      grid-template-columns: 1fr;
+      align-items: start;
+    }
+
+    .office-mate-copy {
+      max-width: none;
+    }
+  }
+</style>
