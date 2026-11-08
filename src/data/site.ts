@@ -30,6 +30,12 @@ export const copy = {
     education: "教育",
     values: "工作方式",
     valueItems: ["先定义可验证的结果，再选择技术。", "让证据、评测和可观测性进入产品闭环。", "在快速迭代和长期可维护性之间寻找平衡。"],
+    officeMate: {
+      title: "站内同事",
+      role: "站长助理",
+      body: "负责午睡、巡房，以及随时打断深度工作。",
+      alt: "Rocky 的猫，站点的非正式审核员"
+    },
     searchTitle: "搜索",
     searchPlaceholder: "搜索笔记与项目…",
     searchHint: "输入关键词开始搜索。",
@@ -66,6 +72,12 @@ export const copy = {
     education: "Education",
     values: "How I work",
     valueItems: ["Define verifiable outcomes before choosing technology.", "Put evidence, evaluation, and observability into the product loop.", "Balance fast iteration with long-term maintainability."],
+    officeMate: {
+      title: "Office mate",
+      role: "Station assistant",
+      body: "Naps, patrols the room, and interrupts deep work at any time.",
+      alt: "Rocky's cat, unofficial site reviewer"
+    },
     searchTitle: "Search",
     searchPlaceholder: "Search notes and projects…",
     searchHint: "Type a keyword to begin.",
